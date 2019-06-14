@@ -32,17 +32,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Create a session configuration
         let configuration = ARImageTrackingConfiguration()
-        configuration.maximumNumberOfTrackedImages = 2
+        configuration.maximumNumberOfTrackedImages = 10
         
         if let imageToTrack = ARReferenceImage.referenceImages(inGroupNamed: "PokemonCard", bundle: Bundle.main)
         {
             
             configuration.trackingImages = imageToTrack
-            print("Image Success")
             
         }
-        
-        
         
         // Run the view's session
         sceneView.session.run(configuration)
@@ -61,10 +58,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let node = SCNNode()
         
         if let imageAnchor = anchor as? ARImageAnchor {
+            var pokemon = "Eevee_ColladaMax"
             
             let plane = SCNPlane(width: imageAnchor.referenceImage.physicalSize.width, height: imageAnchor.referenceImage.physicalSize.height)
             
-            plane.firstMaterial?.diffuse.contents = UIColor(white: 1.0, alpha: 0.4)
+            plane.firstMaterial?.diffuse.contents = UIColor(white: 1.0, alpha: 0)
             
             let planeNode = SCNNode(geometry: plane)
             
@@ -72,7 +70,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
             node.addChildNode(planeNode)
             
-            if let pokeScene = SCNScene(named: "art.scnassets/Eevee_ColladaMax.scn") {
+            if imageAnchor.referenceImage.name == "eeve_card" {
+                pokemon = "Eevee/Eevee_ColladaMax"
+            }
+            else if imageAnchor.referenceImage.name == "blaziken_card" {
+                pokemon = "Blaziken/BlazikenF_ColladaMax"
+            }
+            
+            if let pokeScene = SCNScene(named: "art.scnassets/" + pokemon + ".scn") {
                 
                 if let pokeNode = pokeScene.rootNode.childNodes.first {
                     pokeNode.eulerAngles.x = .pi/2
@@ -82,8 +87,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             }
             
         }
-        
-        
         
         return node
         
