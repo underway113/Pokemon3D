@@ -14,6 +14,16 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     @IBOutlet var sceneView: ARSCNView!
     
+    enum Pokemon3D:String {
+        case Eevee = "Eevee/Eevee_ColladaMax"
+        case Blaziken = "Blaziken/BlazikenF_ColladaMax"
+    }
+    
+    enum PokemonCard:String {
+        case Eevee = "eeve_card"
+        case Blaziken = "blaziken_card"
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -58,7 +68,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let node = SCNNode()
         
         if let imageAnchor = anchor as? ARImageAnchor {
-            var pokemon = "Eevee_ColladaMax"
+            var pokemon = ""
             
             let plane = SCNPlane(width: imageAnchor.referenceImage.physicalSize.width, height: imageAnchor.referenceImage.physicalSize.height)
             
@@ -70,11 +80,16 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
             node.addChildNode(planeNode)
             
-            if imageAnchor.referenceImage.name == "eeve_card" {
-                pokemon = "Eevee/Eevee_ColladaMax"
-            }
-            else if imageAnchor.referenceImage.name == "blaziken_card" {
-                pokemon = "Blaziken/BlazikenF_ColladaMax"
+            switch imageAnchor.referenceImage.name {
+            case PokemonCard.Eevee.rawValue:
+                pokemon = Pokemon3D.Eevee.rawValue
+            case PokemonCard.Blaziken.rawValue:
+                pokemon = Pokemon3D.Blaziken.rawValue
+                
+            case .none:
+                print("")
+            case .some(_):
+                print("")
             }
             
             if let pokeScene = SCNScene(named: "art.scnassets/" + pokemon + ".scn") {
